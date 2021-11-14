@@ -1,4 +1,4 @@
-.PHONY: help install install-dev uninstall check clean run release
+.PHONY: help install uninstall clean run release
 
 # ==========================================
 VENV_NAME?=venv
@@ -6,17 +6,12 @@ VENV_BIN=${VENV_NAME}/bin
 VENV_ACTIVATE=. ${VENV_NAME}/bin/activate
 PYTHON=${VENV_NAME}/bin/python3
 PIP=${VENV_NAME}/bin/pip3
-PYCODESTYLE=${VENV_NAME}/bin/pycodestyle
-PYFLAKES=${VENV_NAME}/bin/pyflakes
 GUNICORN=${VENV_BIN}/gunicorn
-DOCKER=$(shell which docker)
-COMPOSE=$(shell which docker-compose)
-ANSIBLE=$(shell which ansible-playbook)
 export PWD=$(shell pwd)
-export TIMEZONE=$(shell timedatectl status | awk '$$1 == "Time" && $$2 == "zone:" { print $$3 }')
-export USER_ID=$(shell id -u `whoami`)
 ENVIRONMENT=.env
 ENVFILE=$(PWD)/${ENVIRONMENT}
+
+export WEBSCAN_REQUEST=$(PWD)/${WEBSCAN_REQUEST}
 
 ifneq ("$(wildcard $(ENVFILE))","")
     include ${ENVFILE}
@@ -41,12 +36,6 @@ help:
 install:
 	[ -d $(VENV_NAME) ] || python3 -m $(VENV_NAME) $(VENV_NAME)
 	${PIP} install pip wheel -U
-
-# Установка зависимостей для проверки кода
-install-dev:
-	[ -d $(VENV_NAME) ] || python3 -m $(VENV_NAME) $(VENV_NAME)
-	${PIP} install pip wheel -U
-	${PIP} install -r ${DEPENDENCESDEV}
 
 # Активация виртуального окружения для работы приложений
 venv: ${VENV_NAME}/bin/activate
@@ -74,83 +63,34 @@ uninstall:
 
 #===============================================
 # Работа с UssmpPbx
-ifneq ("$(wildcard $(PWD)/$(USSMPPBX_MAKEFILE))","")
-    include ${USSMPPBX_MAKEFILE}
+ifneq ("$(wildcard $(PWD)/$(WEBSCAN_MAKEFILE))","")
+    include ${WEBSCAN_MAKEFILE}
 endif
 
 #===============================================
-# Проверка кода
-check: ${PYCODESTYLE} ${PYFLAKES} ${USSMPPBX} ${SETUP}
-	@echo "==================================="
-	${PYCODESTYLE} ${USSMPPBX} ${SETUP_USSMPPBX}
-	${PYFLAKES} ${USSMPPBX} ${SETUP_USSMPPBX}
-	@echo "=============== OK! ==============="
-
-#===============================================
 # Создание релиза приложения
-release: clean ${USSMPPBX}
+release: clean ${WEBSCAN}
 	[ -d $(RELEASE) ] || mkdir ${RELEASE}
 	[ -d $(ARCHIVE) ] || mkdir ${ARCHIVE}
 	find "${RELEASE}" -name '*.zip' -type f -exec mv -v -t "${ARCHIVE}" {} +
-	zip -r ${RELEASE}/${USSMPPBX}-$(shell date '+%Y-%m-%d-%H-%M-%S').zip \
-	${USSMPPBX} ${MAKEFILE} ${README} ${ENVIRONMENT} ${DEPENDENCESDEV} \
-	${COMPOSEFILE} ${HOSTS} ${PLAYBOOK} ${VARSFILES} ${CERTIFICATE}
+	zip -r ${RELEASE}/${WEBSCAN}-$(shell date '+%Y-%m-%d-%H-%M-%S').zip \
+	${WEBSCAN} ${MAKEFILE} ${README} ${ENVIRONMENT}
 
 #===============================================
-# Сборка сервисов с использованием Docker Compose
-build: ${DOCKER} ${COMPOSE} ${COMPOSEFILE} 
-	make release
-	${COMPOSE} -f ${COMPOSEFILE} build
 
-# Старт сервисов с использованием Docker Compose
-start: ${DOCKER} ${COMPOSE} ${COMPOSEFILE}
-	${COMPOSE} -f ${COMPOSEFILE} up -d
+ping: ${WEBSCAN_REQUEST} 
+	${WEBSCAN_REQUEST} ping
 
-# Остановка сервисов с использованием Docker Compose
-stop: ${DOCKER} ${COMPOSE} ${COMPOSEFILE}
-	${COMPOSE} -f ${COMPOSEFILE} down
+# getinfo: ${WEBSCAN_REQUEST} 
+# 	${WEBSCAN_REQUEST} getinfo
 
-# Логирование сервисов с использованием Docker Compose
-log: ${DOCKER} ${COMPOSE} ${COMPOSEFILE}
-	${COMPOSE} -f ${COMPOSEFILE} logs --follow --tail 500
+# enable: ${WEBSCAN_REQUEST}
+# 	${WEBSCAN_REQUEST} enable
 
-# Рестарт сервисов с использованием Docker Compose
-restart: ${DOCKER} ${COMPOSE} ${COMPOSEFILE}
-	make stop
-	sleep 3
-	make start
+# disable: ${WEBSCAN_REQUEST}
+# 	${WEBSCAN_REQUEST} disable
 
-# Удаление сервисов (для удаления Docker Compose не используется)
-remove: ${DOCKER} ${COMPOSE} ${COMPOSEFILE}
-	make stop
-	make remove-ussmppbx
-
-#===============================================
-# ansible-playbook -i hosts.yml playbook.yml -t start
-
-# Подготовка к установке приложения используя Ansible
-prepare-host: ${HOSTS} ${ANSIBLE}
-	${ANSIBLE} -i ${HOSTS} ${PLAYBOOK} -t prepare
-
-# Устанавливаем приложение используя Ansible
-install-host: ${HOSTS} ${ANSIBLE}
-	make release
-	${ANSIBLE} -i ${HOSTS} ${PLAYBOOK} -t install
-
-# Запускаем приложение используя Ansible
-start-host: ${HOSTS} ${ANSIBLE}
-	${ANSIBLE} -i ${HOSTS} ${PLAYBOOK} -t start
-
-# Останавливаем приложение используя Ansible
-stop-host: ${HOSTS} ${ANSIBLE}
-	${ANSIBLE} -i ${HOSTS} ${PLAYBOOK} -t stop
-
-# Рестарт приложения используя Ansible
-restart-host: ${HOSTS} ${ANSIBLE}
-	${ANSIBLE} -i ${HOSTS} ${PLAYBOOK} -t restart
-
-# Удаление приложения используя Ansible
-remove-host: ${HOSTS} ${ANSIBLE}
-	${ANSIBLE} -i ${HOSTS} ${PLAYBOOK} -t remove
+# getscan: ${WEBSCAN_REQUEST}
+# 	${WEBSCAN_REQUEST} getscan
 
 #===============================================
