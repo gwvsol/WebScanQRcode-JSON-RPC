@@ -18,5 +18,6 @@ def index():
         dispatch(request.get_data().decode()),
         content_type="application/json")
 
+
 def main():
     return app
