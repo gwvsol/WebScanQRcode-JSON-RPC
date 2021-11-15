@@ -81,16 +81,16 @@ release: clean ${WEBSCAN}
 ping: ${WEBSCAN_REQUEST} 
 	${WEBSCAN_REQUEST} ping
 
-# getinfo: ${WEBSCAN_REQUEST} 
-# 	${WEBSCAN_REQUEST} getinfo
+help: ${WEBSCAN_REQUEST} 
+	${WEBSCAN_REQUEST} help
 
-# enable: ${WEBSCAN_REQUEST}
-# 	${WEBSCAN_REQUEST} enable
+enable: ${WEBSCAN_REQUEST}
+	${WEBSCAN_REQUEST} enable
 
-# disable: ${WEBSCAN_REQUEST}
-# 	${WEBSCAN_REQUEST} disable
+disable: ${WEBSCAN_REQUEST}
+	${WEBSCAN_REQUEST} disable
 
-# getscan: ${WEBSCAN_REQUEST}
-# 	${WEBSCAN_REQUEST} getscan
+getscan: ${WEBSCAN_REQUEST}
+	${WEBSCAN_REQUEST} getscan
 
 #===============================================
