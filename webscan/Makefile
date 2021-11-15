@@ -6,7 +6,7 @@ install-webscan: ${DEPENDENCES_WEBSCAN} install
 	${PIP} install --editable ${WEBSCAN}
 
 # Запуск приложения UssmpPbx
-run-webscan: ${SETUP_WEBSCAN} venv
+run: ${SETUP_WEBSCAN} venv
 	${GUNICORN} --chdir ${WEBSCAN} \
 		"${WEBSCAN}.__main__:${WEBSCAN_WEBAPP}()" \
 		--bind ${WEBSCAN_HOST}:${WEBSCAN_PORT} \

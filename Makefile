@@ -23,11 +23,8 @@ endif
 
 help:
 	@echo "make install	- Installing dependencies and applications"
-	@echo "make install-dev - Installing dependencies for code validation"
 	@echo "make uninstall	- Deleting an applications"
 	@echo "make run	- Run the applications"
-	@echo "make check	- Checking the code"
-	@echo "make clean	- Cleaning up garbage"
 	@echo "make release	- Creating a release"
 	@exit 0
 
@@ -81,7 +78,7 @@ release: clean ${WEBSCAN}
 ping: ${WEBSCAN_REQUEST} 
 	${WEBSCAN_REQUEST} ping
 
-help: ${WEBSCAN_REQUEST} 
+info: ${WEBSCAN_REQUEST} 
 	${WEBSCAN_REQUEST} help
 
 enable: ${WEBSCAN_REQUEST}
@@ -90,7 +87,7 @@ enable: ${WEBSCAN_REQUEST}
 disable: ${WEBSCAN_REQUEST}
 	${WEBSCAN_REQUEST} disable
 
-getscan: ${WEBSCAN_REQUEST}
+scan: ${WEBSCAN_REQUEST}
 	${WEBSCAN_REQUEST} getscan
 
 #===============================================
