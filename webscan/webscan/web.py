@@ -15,7 +15,7 @@ def ping() -> Result:
     """ Метод для проверки сервиса
         Запрос вида { "jsonrpc": "2.0", "method": "ping", "id": "13" }
     """
-    log.info('[WEB-QR-API] PING => PONG')
+    log.info('[WEB-QR-API] => PONG')
     return Success(dict(ping=db.get('ping')))
 
 
@@ -73,4 +73,5 @@ def index():
 
 
 def main():
+    log.info('[WEB-QR-API] => START WEBCAM SERVICE')
     return app
