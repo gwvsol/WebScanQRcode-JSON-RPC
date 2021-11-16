@@ -4,10 +4,14 @@ from jsonrpcserver import method, Result, Success, dispatch
 from .config import WEBSCAN_DATA as db
 from .config import WEBSCAN_HELP as helps
 from .config import WEBSCAN_BARCODES as barcodes
+from .config import WEBSCAN_DEV as cam
+from .scan import WebScanDev
 from .log import logging as log
 
 
 app = Flask(__name__)
+
+scan = WebScanDev(webcam=cam, barcodes=barcodes, db=db)
 
 
 @method
@@ -15,7 +19,7 @@ def ping() -> Result:
     """ Метод для проверки сервиса
         Запрос вида { "jsonrpc": "2.0", "method": "ping", "id": "13" }
     """
-    log.info('[WEB-QR-API] => PONG')
+    log.info('=> PONG')
     return Success(dict(ping=db.get('ping')))
 
 
@@ -26,10 +30,8 @@ def enable():
     """
     status = db.get('status')
     if status == 'ScanOFF':
-        db.update({'status': 'ScanON', 'scan': []})
-        barcodes.clear()
-        #  Thread(target=scanBarCode).start()
-    log.info(f"[WEB-QR-API] => {db.get('status')}")
+        scan.start()
+    log.info(f"=> {db.get('status')}")
     return Success(dict(status=db.get('status'), scan=db.get('scan')))
 
 
@@ -40,10 +42,8 @@ def disable() -> Result:
     """
     status = db.get('status')
     if status == 'ScanON':
-        db.update({'status': 'ScanOFF', 'scan': []})
-        db.update({'scan': list(barcodes)})
-        barcodes.clear()
-    log.info(f"[WEB-QR-API] => {db.get('status')}")
+        scan.stop()
+    log.info(f"=> {db.get('status')}")
     return Success(dict(status=db.get('status'), scan=db.get('scan')))
 
 
@@ -52,7 +52,7 @@ def getscan() -> Result:
     """ Метод считывания сканированных данных
         Запрос вида { "jsonrpc": "2.0", "method": "getscan", "id": "12" }
     """
-    log.info(f"[WEB-QR-API] => {db.get('scan')}")
+    log.info(f"=> {db.get('scan')}")
     return Success(dict(status=db.get('status'), scan=db.get('scan')))
 
 
@@ -61,7 +61,7 @@ def help() -> Result:
     """ Метод для получения информации по работе с сервисом
         Запрос вида { "jsonrpc": "2.0", "method": "help", "id": "12" }
     """
-    log.info('[WEB-QR-API] => HELP')
+    log.info('=> HELP')
     return Success(dict(helps))
 
 
@@ -73,5 +73,5 @@ def index():
 
 
 def main():
-    log.info('[WEB-QR-API] => START WEBCAM SERVICE')
+    log.info('=> START WEBCAM SERVICE')
     return app
