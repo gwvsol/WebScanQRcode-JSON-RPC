@@ -34,7 +34,6 @@ class WebScanDev(object):
         vs, fps = self.getWebCam()
         scantime, lastbarcode = datetime.now(), datetime.now()
 
-        # Сканируем только если ScanON
         while self.db.get('status') == "ScanON":
             try:
                 time.sleep(0.6)  # Задержка  для фокусировки камеры
