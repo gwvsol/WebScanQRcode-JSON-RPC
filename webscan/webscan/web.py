@@ -1,6 +1,5 @@
 from flask import Flask, Response, request
 from jsonrpcserver import method, Result, Success, dispatch
-# from .config import WEBSCAN_DEV as web
 from .config import WEBSCAN_DATA as db
 from .config import WEBSCAN_HELP as helps
 from .config import WEBSCAN_BARCODES as barcodes
