@@ -66,11 +66,13 @@ def help() -> Result:
 
 @app.route("/", methods=["POST"])
 def index():
+    """ Метод устанавливаеющий endpoint web интерфеса """
     return Response(
         dispatch(request.get_data().decode()),
         content_type="application/json")
 
 
 def main():
-    log.info('=> START WEBCAM SERVICE')
+    """ Метод для запуска приложения """
+    log.info(f'=> START WEBCAM SERVICE {__name__}')
     return app
