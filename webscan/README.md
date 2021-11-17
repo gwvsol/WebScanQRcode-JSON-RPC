@@ -28,4 +28,8 @@
 [jsonrpcserver’s documentation](https://www.jsonrpcserver.com/en/latest/index.html)    
 [JSON-RPC in Python with Flask](https://composed.blog/jsonrpc/flask)    
 
+---   
+[Python logging mage (stupidly) simple - GitHub](https://github.com/Delgan/loguru)   
+[Python logging mage (stupidly) simple - Documentation](https://github.com/Delgan/loguru)     
+
 ---
