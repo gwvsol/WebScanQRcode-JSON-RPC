@@ -57,10 +57,10 @@ sudo apt-get install libzbar0
 Команда ```make install-webscan``` создает изолированное виртуальное окружение, куда устанавливается приложение    
 
 Для корректной работы команд ```make ping, make enable, make disable, make getscan, make info```   
-необходимо чтобы в системе были установлены утилиты ```curl``` и ```jq```     
+необходимо чтобы в системе были установлены утилиты ```curl, jq, zip```     
 Установка ```curl``` и ```jq```  в случае необходимости   
 ```shell
-sudo apt-get install curl jq
+sudo apt-get install curl jq zip unzip
 ```    
 
 ---
