@@ -22,16 +22,22 @@ endif
 .DEFAULT: help
 
 help:
-	@echo "make install	- Installing dependencies and applications"
-	@echo "make uninstall	- Deleting an applications"
-	@echo "make run	- Run the applications"
-	@echo "make release	- Creating a release"
+	@echo "make install-webscan - Установка зависимостей и приложения"
+	@echo "make uninstall	- Удаление приложения"
+	@echo "make run	- Запуск приложения"
+	@echo "make ping	- Проверка работы сервиса"
+	@echo "make enable	- Включение WEB сканера"
+	@echo "make disable	- Выключение WEB сканера"
+	@echo "make getscan	- Cчитывание сканированных данных"
+	@echo "make info	- Получение информации по работе с сервисом (help)"
 	@exit 0
 
 #=============================================
-# Установка зависимостей для работы приложений
+# Установка зависимостей для работы приложения
 install:
 	[ -d $(VENV_NAME) ] || python3 -m $(VENV_NAME) $(VENV_NAME)
+#	sudo apt update
+#	sudo apt-get install libzbar0
 	${PIP} install pip wheel -U
 
 # Активация виртуального окружения для работы приложений
@@ -59,7 +65,7 @@ uninstall:
 	rm -fr ${VENV_NAME}
 
 #===============================================
-# Работа с UssmpPbx
+# Работа с WebScan
 ifneq ("$(wildcard $(PWD)/$(WEBSCAN_MAKEFILE))","")
     include ${WEBSCAN_MAKEFILE}
 endif
@@ -76,18 +82,18 @@ release: clean ${WEBSCAN}
 #===============================================
 
 ping: ${WEBSCAN_REQUEST} 
-	${WEBSCAN_REQUEST} ping
+	${PWD}/${WEBSCAN_REQUEST} ping
 
 info: ${WEBSCAN_REQUEST} 
-	${WEBSCAN_REQUEST} help
+	${PWD}/${WEBSCAN_REQUEST} help
 
 enable: ${WEBSCAN_REQUEST}
-	${WEBSCAN_REQUEST} enable
+	${PWD}/${WEBSCAN_REQUEST} enable
 
 disable: ${WEBSCAN_REQUEST}
-	${WEBSCAN_REQUEST} disable
+	${PWD}/${WEBSCAN_REQUEST} disable
 
 scan: ${WEBSCAN_REQUEST}
-	${WEBSCAN_REQUEST} getscan
+	${PWD}/${WEBSCAN_REQUEST} getscan
 
 #===============================================
