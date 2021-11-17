@@ -8,4 +8,5 @@ from loguru import logger as logging
 #                     datefmt='%Y-%m-%d %H:%M:%S')
 
 logging.add(str, format="<green>{time:YYYY-MM-DD HH:mm:ss}</green>|\
-{level}|<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> {message}")
+{level}|<cyan>{name}</cyan>:<cyan>{function}\
+</cyan>:<cyan>{line}</cyan> {message}")
