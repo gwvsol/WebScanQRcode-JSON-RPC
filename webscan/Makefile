@@ -1,11 +1,11 @@
 #=============================================
-# Определение переменных для установки и запуска UssmpPbx
+# Определение переменных для установки и запуска WebScan
 SETUP=${SETUP_WEBSCAN}
 install-webscan: ${DEPENDENCES_WEBSCAN} install
 	${PIP} install pip wheel -U
 	${PIP} install --editable ${WEBSCAN}
 
-# Запуск приложения UssmpPbx
+# Запуск приложения WebScan
 run: ${SETUP_WEBSCAN} venv
 	${GUNICORN} --chdir ${WEBSCAN} \
 		"${WEBSCAN}.__main__:${WEBSCAN_WEBAPP}()" \
