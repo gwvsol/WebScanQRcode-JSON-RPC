@@ -1,27 +1,64 @@
 ## Service with scanning QR codes using a web camera    
 ---    
 
-### Используемые библиотеки
+Cервис сканирования и распознавания QR кодов с помощью Web камеры     
 
-[pyzbar](https://github.com/NaturalHistoryMuseum/pyzbar) - GitHub   
-[Обнаружение QR-кода из Pyzbar с изображением камеры](https://coderoad.ru/50080949/Обнаружение-QR-кода-из-Pyzbar-с-изображением-камеры)    
-[Предварительная обработка изображений для обнаружения QR в python](https://question-it.com/questions/803963/predvaritelnaja-obrabotka-izobrazhenij-dlja-obnaruzhenija-qr-v-python)    
+Управление сервисом оуществляется с помощью команд отправляемых на JSON-RPC сервер    
 
----   
-[imutils](https://github.com/PyImageSearch/imutils)    
-[I just open sourced my personal imutils package: A series of OpenCV convenience functions](https://www.pyimagesearch.com/2015/02/02/just-open-sourced-personal-imutils-package-series-opencv-convenience-functions/)      
+Команды управления:    
 
+Проверка работы сервиса   
+```shell
+{ "jsonrpc": "2.0", "method": "ping", "id": "13" }
+```   
 
----    
-[OpenCV](https://docs.opencv.org/4.5.4/)    
-[OpenCV-Python Tutorials](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html)    
-[OpenCV on Wheels](https://github.com/opencv/opencv-python)    
-[OpenCV в Python. Часть 1](https://habr.com/ru/post/519454/)    
-[Шпаргалка по OpenCV — Python](https://tproger.ru/translations/opencv-python-guide/)    
-[Значение параметра opencv cv2.rectangle](https://russianblogs.com/article/36191454328/)     
-[Python OpenCV: how to draw rectangles on an image](https://techtutorialsx.com/2020/12/29/python-opencv-draw-rectangles/)     
+Включение WEB сканера    
+```shell
+{ "jsonrpc": "2.0", "method": "enable", "id": "15" }
+```   
 
----   
-[jsonrpcserver’s documentation](https://www.jsonrpcserver.com/en/latest/index.html)    
-[JSON-RPC in Python with Flask](https://composed.blog/jsonrpc/flask)    
+Выключение WEB сканера    
+```shell
+{ "jsonrpc": "2.0", "method": "disable", "id": "15" }
+```    
 
+Cчитывание сканированных данных    
+```shell
+{ "jsonrpc": "2.0", "method": "getscan", "id": "12" }
+```     
+
+Получение информации по работе с сервисом (help)    
+```shell
+{ "jsonrpc": "2.0", "method": "help", "id": "12" }
+```
+
+Настройка сервиса с помощью изменения файла ```.env```    
+Переменные которые требуют изменения     
+```WEBSCAN_WEBCAM``` - абсолютный путь к webcam    
+```WEBSCAN_PORT``` -  порт на котором будет работать сервис    
+
+Из диретории, где установлено приложение, возможно управление с помощью команд ```make```    
+```shell
+make install-webscan - Установка зависимостей и приложения
+make uninstall	- Удаление приложения
+make run	    - Запуск приложения
+make ping	    - Проверка работы сервиса
+make enable	    - Включение WEB сканера
+make disable	- Выключение WEB сканера
+make getscan	- Cчитывание сканированных данных
+make info	    - Получение информации по работе с сервисом (help)
+```    
+
+Перед установкой приложение необходимо убедиться имеется ли в системе библиотека ```libzbar0``` - необходима для чтения данных QR кодов    
+Установка ```libzbar0```  в случае необходимости   
+```shell
+sudo apt-get install libzbar0
+```
+Команда ```make install-webscan``` создает изолированное виртуальное окружение, куда устанавливается приложение    
+
+Для корректной работы команд ```make ping, make enable, make disable, make getscan, make info```   
+необходимо чтобы в системе были установлены утилиты ```curl``` и ```jq```     
+Установка ```curl``` и ```jq```  в случае необходимости   
+```shell
+sudo apt-get install curl jq
+```   
