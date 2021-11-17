@@ -1,5 +1,5 @@
 """
-Сервис с сканирования QR кодов с помощью web камеры
+Service with scanning QR codes using a web camera
 """
 
 __author__ = 'Fedorov Mikhail'
